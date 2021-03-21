@@ -15,10 +15,6 @@ class Unit{
     +String description
 }
 
-class UnitType{
-    +String description
-}
-
 class Mesure{
     +datetime timestamp
 }
@@ -49,15 +45,14 @@ class ActuatorEffect{
 }
 
 Sensor --o SensorUnit
-SensorUnit --o Unit
+SensorUnit -- Unit
 UnitMesure -- Unit
-Unit -- UnitType
 UnitMesure -- Sensor
 Mesure --o UnitMesure
 ExpectedMeasure -- Unit
 Configuration --o ExpectedMeasure
 Chamber --o Configuration
-Chamber -- Sensor
+Chamber --o Sensor
 Chamber --o Actuator
 Actuator --o ActuatorEffect
 ActuatorEffect -- Unit
