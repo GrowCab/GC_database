@@ -50,16 +50,16 @@ class ActuatorEffect{
 
 Sensor --o SensorUnit
 SensorUnit --o Unit
-UnitMesure --> Unit
-Unit --> UnitType
-UnitMesure --> Sensor
+UnitMesure -- Unit
+Unit -- UnitType
+UnitMesure -- Sensor
 Mesure --o UnitMesure
-ExpectedMeasure --> Unit
+ExpectedMeasure -- Unit
 Configuration --o ExpectedMeasure
 Chamber --o Configuration
-Chamber --> Sensor
-Chamber --> Actuator
+Chamber -- Sensor
+Chamber --o Actuator
 Actuator --o ActuatorEffect
-ActuatorEffect --> Unit
+ActuatorEffect -- Unit
 
 ```
