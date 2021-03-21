@@ -70,6 +70,7 @@ class ChamberSchema(ma.SQLAlchemyAutoSchema):
 class SensorSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sensor
+        include_fk = True
         load_instance = True
 
 
@@ -82,16 +83,19 @@ class SensorUnitSchema(ma.SQLAlchemyAutoSchema):
 class UnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Unit
+        include_fk = True
         load_instance = True
 
 
 class ConfigurationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Configuration
+        include_fk = True
         load_instance = True
 
 
 class ExpectedMeasureSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = ExpectedMeasure
+        include_fk = True
         load_instance = True
