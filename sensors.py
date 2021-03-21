@@ -9,7 +9,6 @@ from config import db
 from models import Sensor, SensorSchema
 
 sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/sensors', description='Operations on sensors')
-sensor_blp = Blueprint('sensor', 'sensor',  url_prefix='/sensor', description='Operations on a single sensor')
 
 
 @sensors_blp.route('/')
@@ -51,11 +50,14 @@ class SensorListAPI(MethodView):
             )
 
 
+sensor_blp = Blueprint('sensor', 'sensor',  url_prefix='/sensor', description='Operations on a single sensor')
+
+
 @sensor_blp.route('/<int:sensor_id>')
 class SensorAPI(MethodView):
     @sensor_blp.response(200, SensorSchema)
     def get(self, sensor_id):
-        sensor = Sensor.query.filter(Sensor.sensor_id == sensor_id).one_or_none()
+        sensor = Sensor.query.filter(Sensor.id == sensor_id).one_or_none()
         if sensor is not None:
             return sensor
         else:
@@ -66,7 +68,7 @@ class SensorAPI(MethodView):
     @sensor_blp.response(200, SensorSchema)
     def put(self, sensor: SensorSchema, sensor_id: int):
         # Get the sensor requested from the db into session
-        update_sensor = Sensor.query.filter(Sensor.sensor_id == sensor_id).one_or_none()
+        update_sensor = Sensor.query.filter(Sensor.id == sensor_id).one_or_none()
         # Try to find an existing sensor with the same name as the update
         description = sensor.description
 
@@ -80,7 +82,7 @@ class SensorAPI(MethodView):
             )
 
         # Would our update create a duplicate of another sensor already existing?
-        elif existing_sensor is not None and existing_sensor.sensor_id != sensor_id:
+        elif existing_sensor is not None and existing_sensor.id != sensor_id:
             abort(
                 409,
                 f"Sensor {description} exists already",
@@ -89,7 +91,7 @@ class SensorAPI(MethodView):
         # Otherwise go ahead and update!
         else:
             # Set the id to the sensor we want to update
-            sensor.sensor_id = update_sensor.sensor_id
+            sensor.sensor_id = update_sensor.id
 
             # merge the new object into the old and commit it to the db
             db.session.merge(sensor)
@@ -99,7 +101,7 @@ class SensorAPI(MethodView):
 
     def delete(self, sensor_id: int):
         # Get the sensor requested
-        sensor = Sensor.query.filter(Sensor.sensor_id == sensor_id).one_or_none()
+        sensor = Sensor.query.filter(Sensor.id == sensor_id).one_or_none()
 
         # Did we find a sensor?
         if sensor is not None:
