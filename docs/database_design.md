@@ -4,7 +4,7 @@ classDiagram
 class Sensor{
     +String description
 }
-class Unit{    
+class Unit{
 }
 class Mesure{
     +datetime timestamp
