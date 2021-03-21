@@ -4,7 +4,7 @@ classDiagram
 class Sensor{
     +String description
 }
-class Unit{    
+class Unit{ 
 }
 class Mesure{
     +datetime timestamp
@@ -34,6 +34,8 @@ Mesure --o UnitMesure
 ExpectedMeasure --> Unit
 Configuration --o ExpectedMeasure
 Chamber --o Configuration
+Chamber --> Sensor
+Chamber --> Actuator
 
 
 ```
