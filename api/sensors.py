@@ -6,7 +6,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 
 from config import db
-from models import Sensor, SensorSchema
+from models.models import Sensor, SensorSchema
 
 sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/sensors', description='Operations on sensors')
 

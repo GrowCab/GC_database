@@ -1,5 +1,5 @@
 import config
-from sensors import sensors_blp, sensor_blp
+from api.sensors import sensors_blp, sensor_blp
 
 app = config.app  # Flask app instance initiated
 api = config.api
