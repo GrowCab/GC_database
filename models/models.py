@@ -73,12 +73,8 @@ class SensorSchema(ma.SQLAlchemyAutoSchema):
         model = Sensor
         include_fk = True
         load_instance = True
-
-
-class SensorUnitSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = SensorUnit
-        load_instance = True
+        exclude = ("chamber_id",)
+    chamber = ma.Nested(ChamberSchema)
 
 
 class UnitSchema(ma.SQLAlchemyAutoSchema):
@@ -86,6 +82,13 @@ class UnitSchema(ma.SQLAlchemyAutoSchema):
         model = Unit
         include_fk = True
         load_instance = True
+
+
+class SensorUnitSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = SensorUnit
+        load_instance = True
+    unit = ma.Nested(UnitSchema)
 
 
 class ConfigurationSchema(ma.SQLAlchemyAutoSchema):
