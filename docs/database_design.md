@@ -15,12 +15,11 @@ class Unit{
     +String description
 }
 
-class Mesure{
+class Measure{
     +datetime timestamp
-}
-class UnitMesure{
     +float value
 }
+
 class ExpectedMeasure{
     +float min
     +float max
@@ -46,9 +45,7 @@ class ActuatorEffect{
 
 Sensor --o SensorUnit
 SensorUnit -- Unit
-UnitMesure -- Unit
-UnitMesure -- Sensor
-Mesure --o UnitMesure
+SensorUnit --o Measure
 ExpectedMeasure -- Unit
 Configuration --o ExpectedMeasure
 Chamber --o Configuration

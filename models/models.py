@@ -1,3 +1,4 @@
+from ctypes import Union
 from datetime import datetime
 
 from sqlalchemy.orm import relationship
@@ -14,6 +15,7 @@ class Chamber(db.Model):
 
     configuration = relationship("Configuration")
     sensor = relationship("Sensor")
+    actuator = relationship("Actuator")
 
 
 class Sensor(db.Model):
@@ -35,6 +37,14 @@ class SensorUnit(db.Model):
     sensor = relationship('Sensor', foreign_keys=[sensor_id])
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
     unit = relationship('Unit')
+
+
+class Measure(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    current_value = db.Column(db.Float, nullable=False)
+    sensor_unit_id = db.Column(db.Integer, db.ForeignKey('sensor_unit.id'))
+    sensor_unit = relationship('SensorUnit')
 
 
 class Unit(db.Model):
@@ -60,6 +70,25 @@ class ExpectedMeasure(db.Model):
     hour = db.Column(db.Integer, nullable=False)
     minute = db.Column(db.Integer, nullable=False)
     configuration_id = db.Column(db.Integer, db.ForeignKey('configuration.id'))
+    unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    unit = relationship('Unit')
+
+
+class Actuator(db.Model):
+    __tablename__ = "actuator"
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(512), nullable=False)
+    chamber_id = db.Column(db.Integer, db.ForeignKey('chamber.id'))
+    actuator_effect = relationship("ActuatorEffect")
+
+
+class ActuatorEffect(db.Model):
+    __tablename__ = "actuator_effect"
+    id = db.Column(db.Integer, primary_key=True)
+    change = db.Column(db.Integer, nullable=False)
+    actuator_id = db.Column(db.Integer, db.ForeignKey('actuator.id'))
+    unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    unit = relationship('Unit')
 
 
 class ChamberSchema(ma.SQLAlchemyAutoSchema):
