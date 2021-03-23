@@ -1,6 +1,6 @@
 import os
-from config import db
-from models.models import Sensor, Configuration, Chamber, Unit, SensorUnit
+from config.config import db
+from models.models import Sensor, Chamber, Unit, SensorUnit
 
 if __name__ == "__main__":
 

@@ -5,10 +5,23 @@ from flask import make_response, abort
 from flask.views import MethodView
 from flask_smorest import Blueprint
 
-from config import db
+from config.config import db, app
 from models.models import Sensor, SensorSchema
 
 sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/sensors', description='Operations on sensors')
+
+"""
+A simple endpoint that informs the user that this teapot is not able to brew
+coffee. See RFC 2324 for more information about the Hyper Text Coffee Pot
+Control Protocol.
+
+>>> response = app.test_client().get('/brew/coffee')
+>>> response.status_code
+418
+>>> assert 'Unable to brew coffee.' in response.data.decode()
+
+:return: A 418 response as described in RFC 2324
+"""
 
 
 @sensors_blp.route('/')
@@ -16,6 +29,20 @@ class SensorListAPI(MethodView):
     @sensors_blp.response(200, SensorSchema(many=True))
     def get(self):
         """Get the list of sensors
+
+        ---------
+
+        Doctest setup
+        ---------
+        >>> app.register_blueprint(sensor_blp)
+        >>> db.engine.echo = False  # Make the SQLAlchemy a bit quieter to have empty output in the next line
+
+        Examples / Tests
+        --------
+        >>> response = app.test_client().get('/sensors/')
+        >>> response.status_code
+        200
+
 
         -------------------
         :return: Returns a list of sensor objects

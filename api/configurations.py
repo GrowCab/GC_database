@@ -5,7 +5,7 @@ from flask import abort
 from flask.views import MethodView
 from flask_smorest import Blueprint
 
-from config import db
+from config.config import db
 from models.models import Configuration, ConfigurationSchema
 
 configuration_blp = Blueprint('configurations', 'configurations',

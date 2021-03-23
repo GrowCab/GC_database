@@ -3,8 +3,8 @@ from datetime import datetime
 
 from sqlalchemy.orm import relationship
 
-from config import db
-from config import ma
+from config.config import db
+from config.config import ma
 
 
 class Chamber(db.Model):
