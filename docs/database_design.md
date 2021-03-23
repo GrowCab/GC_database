@@ -15,8 +15,11 @@ class Unit{
     +String description
 }
 
-class Measure{
+class MeasureGroup{
     +datetime timestamp
+}
+
+class Measure{
     +float value
 }
 
@@ -43,13 +46,16 @@ class ActuatorEffect{
     +int change
 }
 
+MeasureGroup --o Measure
+Measure -- ChamberSensor
+SensorUnit -- Measure
 Sensor --o SensorUnit
 SensorUnit -- Unit
-SensorUnit --o Measure
+Chamber --o ChamberSensor
+Sensor -- ChamberSensor
 ExpectedMeasure -- Unit
 Configuration --o ExpectedMeasure
 Chamber --o Configuration
-Chamber --o Sensor
 Chamber --o Actuator
 Actuator --o ActuatorEffect
 ActuatorEffect -- Unit
