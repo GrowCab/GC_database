@@ -10,19 +10,6 @@ from models.models import Sensor, SensorSchema
 
 sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/sensors', description='Operations on sensors')
 
-"""
-A simple endpoint that informs the user that this teapot is not able to brew
-coffee. See RFC 2324 for more information about the Hyper Text Coffee Pot
-Control Protocol.
-
->>> response = app.test_client().get('/brew/coffee')
->>> response.status_code
-418
->>> assert 'Unable to brew coffee.' in response.data.decode()
-
-:return: A 418 response as described in RFC 2324
-"""
-
 
 @sensors_blp.route('/')
 class SensorListAPI(MethodView):
