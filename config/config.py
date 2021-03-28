@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask_smorest import Api, Blueprint, abort
+from flask_smorest import Api
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
