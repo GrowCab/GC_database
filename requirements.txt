@@ -1,7 +1,7 @@
 Flask==1.1.2
 flask-marshmallow==0.14.0
-flask-smorest
+flask-smorest==0.29.0
 Flask-SQLAlchemy==2.5.1
-marshmallow==3.10.0
+marshmallow==3.11.0
 marshmallow-sqlalchemy==0.24.2
-SQLAlchemy==1.4.2
+SQLAlchemy==1.4.3
