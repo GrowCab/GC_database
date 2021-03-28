@@ -24,10 +24,11 @@ class Measure{
 }
 
 class ExpectedMeasure{
-    +float min
-    +float max
-    +int hour
-    +int minute
+    +float expected_value
+    +int start_hour
+    +int start_minute
+    +int end_hour
+    +int end_minute
 }
 class Configuration{
     +datetime start
