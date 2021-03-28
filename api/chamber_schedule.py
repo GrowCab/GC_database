@@ -10,7 +10,7 @@ schedule_blp = Blueprint('chamber_schedule', 'chamber_schedule',
 
 @schedule_blp.route('/chamber_schedule/<int:configuration_id>')
 class ChamberSchedule(MethodView):
-    @schedule_blp.doc(opertationId='getChamberSchedule')
+    @schedule_blp.doc(operationId='getChamberSchedule')
     @schedule_blp.response(200, ExpectedMeasureSchema(many=True))
     def get(self, configuration_id: int):
         return ExpectedMeasure.query.filter(ExpectedMeasure.configuration_id == configuration_id).order_by(
