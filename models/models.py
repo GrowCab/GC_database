@@ -24,7 +24,7 @@ class Sensor(db.Model):
     description = db.Column(db.String(512), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     chamber_id = db.Column(db.Integer, db.ForeignKey('chamber.id'))
-    chamber = relationship("Chamber")
+    chamber = relationship("Chamber", back_populates='sensor')
     sensor_unit = relationship("SensorUnit")
 
 
@@ -34,7 +34,7 @@ class SensorUnit(db.Model):
     min = db.Column(db.Float)
     max = db.Column(db.Float)
     sensor_id = db.Column(db.Integer, db.ForeignKey('sensor.id'))
-    sensor = relationship('Sensor', foreign_keys=[sensor_id])
+    sensor = relationship('Sensor', back_populates='sensor_unit', foreign_keys=[sensor_id])
     unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
     unit = relationship('Unit')
 

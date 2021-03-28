@@ -8,11 +8,12 @@ from flask_smorest import Blueprint
 from config.config import db, app
 from models.models import Sensor, SensorSchema
 
-sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/sensors', description='Operations on sensors')
+sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/api', description='Operations on sensors')
 
 
-@sensors_blp.route('/')
+@sensors_blp.route('/sensors')
 class SensorListAPI(MethodView):
+    @sensors_blp.doc(operationId="getSensors")
     @sensors_blp.response(200, SensorSchema(many=True))
     def get(self):
         """Get the list of sensors
@@ -26,16 +27,16 @@ class SensorListAPI(MethodView):
 
         Examples / Tests
         --------
-        >>> response = app.test_client().get('/sensors/')
+        >>> response = app.test_client().get('/api/sensors')
         >>> response.status_code
         200
-
 
         -------------------
         :return: Returns a list of sensor objects
         """
         return Sensor.query.order_by(Sensor.description).all()
 
+    @sensors_blp.doc(operationId="putSensor")
     @sensors_blp.arguments(SensorSchema(partial=True))
     @sensors_blp.response(200, SensorSchema)
     def put(self, sensor):
@@ -64,11 +65,12 @@ class SensorListAPI(MethodView):
             )
 
 
-sensor_blp = Blueprint('sensor', 'sensor',  url_prefix='/sensor', description='Operations on a single sensor')
+sensor_blp = Blueprint('sensor', 'sensor',  url_prefix='/api/', description='Operations on a single sensor')
 
 
-@sensor_blp.route('/<int:sensor_id>')
+@sensor_blp.route('/sensor/<int:sensor_id>')
 class SensorAPI(MethodView):
+    @sensors_blp.doc(operationId='getSensor')
     @sensor_blp.response(200, SensorSchema)
     def get(self, sensor_id):
         sensor = Sensor.query.filter(Sensor.id == sensor_id).one_or_none()
@@ -78,9 +80,10 @@ class SensorAPI(MethodView):
             abort(404,
                   f"No sensor with ID {sensor_id} was found")
 
+    @sensors_blp.doc(operationId='patchSensor')
     @sensor_blp.arguments(SensorSchema)
     @sensor_blp.response(200, SensorSchema)
-    def put(self, sensor: SensorSchema, sensor_id: int):
+    def patch(self, sensor: SensorSchema, sensor_id: int):
         # Get the sensor requested from the db into session
         update_sensor = Sensor.query.filter(Sensor.id == sensor_id).one_or_none()
         # Try to find an existing sensor with the same name as the update
@@ -113,6 +116,7 @@ class SensorAPI(MethodView):
 
             return sensor, 200
 
+    @sensors_blp.doc(operationId='deleteSensor')
     def delete(self, sensor_id: int):
         # Get the sensor requested
         sensor = Sensor.query.filter(Sensor.id == sensor_id).one_or_none()
