@@ -13,6 +13,7 @@ class SensorUnit{
 
 class Unit{
     +String description
+    +float default_value
 }
 
 class MeasureGroup{
