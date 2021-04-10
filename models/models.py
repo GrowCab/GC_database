@@ -146,3 +146,4 @@ class ConfigurationSchema(SQLAlchemyAutoSchema):
         model = Configuration
         include_fk = True
         load_instance = True
+    expected_measure = Nested(ExpectedMeasureSchema(many=True))
