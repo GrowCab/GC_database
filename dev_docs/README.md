@@ -18,7 +18,7 @@ Should install all the requirements to execute the GC_database server and start 
 To run the server go to the `GC_database` folder and execute:
 
 ```shell
-python app.py
+python3 app.py
 ```
 
 # Running the tests
