@@ -13,6 +13,7 @@ class SensorUnit{
 
 class Unit{
     +String description
+    +float default_value
 }
 
 class MeasureGroup{
@@ -23,13 +24,19 @@ class Measure{
     +float value
 }
 
+%% The first value of the intervals (0000)
+%% is implicit making the last interval
+%% (2359) always required. Any configuration
+%% of intervals in-between is be valid.
 class ExpectedMeasure{
     +float expected_value
-    +int start_hour
-    +int start_minute
     +int end_hour
     +int end_minute
 }
+
+%% The configuration API is required to request
+%% the units available for configuration through
+%% the ChamberSensor->SensorUnit->Unit relation
 class Configuration{
     +datetime start
     +datetime end
