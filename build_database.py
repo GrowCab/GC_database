@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 from config.config import db
-from models.models import Sensor, Chamber, Unit, SensorUnit, Configuration, ExpectedMeasure
+from models.models import Sensor, Chamber, Unit, SensorUnit, Configuration, ExpectedMeasure, ChamberSensor
 
 if __name__ == "__main__":
 
@@ -29,10 +29,10 @@ if __name__ == "__main__":
     db.session.bulk_save_objects([lux, hum, cel], return_defaults=True)
     db.session.commit()
 
-    # Add a new sensor
+    # Add a new sensors
 
-    temperature_and_humidity_sensor = Sensor(description="BME280", chamber_id=chamber1.id)
-    illumination_sensor = Sensor(description="ILUM", chamber_id=chamber1.id)
+    temperature_and_humidity_sensor = Sensor(description="BME280")
+    illumination_sensor = Sensor(description="ILUM")
     db.session.bulk_save_objects([temperature_and_humidity_sensor, illumination_sensor], return_defaults=True)
 
     # Add sensor units
@@ -43,15 +43,21 @@ if __name__ == "__main__":
     db.session.bulk_save_objects([celsius_unit, humidity_unit, lux_unit], return_defaults=True)
     db.session.commit()
 
+    # Add sensors to the chamber
+    db.session.bulk_save_objects([
+        ChamberSensor(chamber_id=chamber1.id, sensor_id=temperature_and_humidity_sensor.id),
+        ChamberSensor(chamber_id=chamber1.id, sensor_id=illumination_sensor.id)
+    ])
+
     # Add a configuration to the chamber
 
-    chamber1_configuration = Configuration(chamber=chamber1, start=datetime.now(), description="Until forever")
+    chamber1_configuration = Configuration(chamber=chamber1, description="Until forever")
     db.session.add(chamber1_configuration)
     db.session.commit()
 
-    expected1 = ExpectedMeasure(expected_value=28, start_hour=0, start_minute=0, end_hour=6, end_minute=0,
+    expected1 = ExpectedMeasure(expected_value=28, end_hour=6, end_minute=0,
                                 configuration=chamber1_configuration, unit=cel)
-    expected2 = ExpectedMeasure(expected_value=16, start_hour=6, start_minute=1, end_hour=23, end_minute=59,
+    expected2 = ExpectedMeasure(expected_value=16, end_hour=23, end_minute=59,
                                 configuration=chamber1_configuration, unit=cel)
 
     db.session.add(expected1)
@@ -63,4 +69,5 @@ if __name__ == "__main__":
     all_sensor_units = SensorUnit.query.all()
     all_units = Unit.query.all()
     all_configurations = Configuration.query.all()
+
     [print(s) for s in all_sensors]

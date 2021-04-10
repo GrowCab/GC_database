@@ -16,7 +16,7 @@ class Chamber(db.Model):
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     configuration = relationship("Configuration")
-    sensor = relationship("Sensor")
+    chamber_sensor = relationship("ChamberSensor")
     actuator = relationship("Actuator")
 
 
@@ -25,9 +25,16 @@ class Sensor(db.Model):
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    chamber_id = Column(Integer, ForeignKey('chamber.id'))
-    chamber = relationship("Chamber", back_populates='sensor')
     sensor_unit = relationship("SensorUnit")
+
+
+class ChamberSensor(db.Model):
+    __tablename__ = "chamber_sensor"
+    id = Column(Integer, primary_key=True)
+    chamber_id = Column(Integer, ForeignKey('chamber.id'))
+    sensor_id = Column(Integer, ForeignKey('sensor.id'))
+    chamber = relationship("Chamber", back_populates='chamber_sensor')
+    sensor = relationship("Sensor")
 
 
 class SensorUnit(db.Model):
@@ -59,19 +66,20 @@ class Configuration(db.Model):
     __tablename__ = "configuration"
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
-    start = Column(DateTime, nullable=False)
-    end = Column(DateTime, nullable=True)
     chamber_id = Column(Integer, ForeignKey('chamber.id'))
+    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     expected_measure = relationship("ExpectedMeasure", back_populates='configuration')
     chamber = relationship("Chamber", back_populates='configuration')
 
 
 class ExpectedMeasure(db.Model):
+    """
+    The first value of the intervals (0000) is implicit making the last interval
+    (2359) always required. Any configuration of intervals in-between is be valid.
+    """
     __tablename__ = "expected_measure"
     id = Column(Integer, primary_key=True)
     expected_value = Column(Float, nullable=False)
-    start_hour = Column(Integer, nullable=False)
-    start_minute = Column(Integer, nullable=False)
     end_hour = Column(Integer, nullable=False)
     end_minute = Column(Integer, nullable=False)
     configuration_id = Column(Integer, ForeignKey('configuration.id'))
@@ -108,7 +116,6 @@ class SensorSchema(SQLAlchemyAutoSchema):
         model = Sensor
         include_fk = True
         load_instance = True
-        exclude = ("chamber_id",)
     chamber = Nested(ChamberSchema)
 
 
