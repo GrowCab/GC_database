@@ -59,9 +59,14 @@ if __name__ == "__main__":
                                 configuration=chamber1_configuration, unit=cel)
     expected2 = ExpectedMeasure(expected_value=16, end_hour=23, end_minute=59,
                                 configuration=chamber1_configuration, unit=cel)
-
     db.session.add(expected1)
     db.session.add(expected2)
+    db.session.commit()
+
+    db.session.bulk_save_objects([
+        ExpectedMeasure(expected_value=0, end_hour=6, end_minute=0, configuration=chamber1_configuration, unit=lux),
+        ExpectedMeasure(expected_value=1, end_hour=23, end_minute=59, configuration=chamber1_configuration, unit=lux)
+    ], return_defaults=True)
     db.session.commit()
 
     all_sensors = Sensor.query.all()
