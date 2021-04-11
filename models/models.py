@@ -26,6 +26,7 @@ class Sensor(db.Model):
     description = Column(String(512), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     sensor_unit = relationship("SensorUnit")
+    chamber_sensor = relationship('ChamberSensor')
 
 
 class ChamberSensor(db.Model):
@@ -109,6 +110,13 @@ class ChamberSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Chamber
         load_instance = True
+    sensors = Nested('ChamberSensorSchema', many=True)
+
+
+class ChamberSensorSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = ChamberSensor
+        load_instance = True
 
 
 class SensorSchema(SQLAlchemyAutoSchema):
@@ -116,7 +124,7 @@ class SensorSchema(SQLAlchemyAutoSchema):
         model = Sensor
         include_fk = True
         load_instance = True
-    chamber = Nested(ChamberSchema)
+    chamber = Nested('ChamberSchema')
 
 
 class UnitSchema(SQLAlchemyAutoSchema):
@@ -130,7 +138,7 @@ class SensorUnitSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = SensorUnit
         load_instance = True
-    unit = Nested(UnitSchema)
+    unit = Nested('UnitSchema')
 
 
 class ExpectedMeasureSchema(SQLAlchemyAutoSchema):
@@ -138,7 +146,7 @@ class ExpectedMeasureSchema(SQLAlchemyAutoSchema):
         model = ExpectedMeasure
         include_fk = True
         load_instance = True
-    unit = Nested(UnitSchema)
+    unit = Nested('UnitSchema')
 
 
 class ConfigurationSchema(SQLAlchemyAutoSchema):
@@ -146,4 +154,4 @@ class ConfigurationSchema(SQLAlchemyAutoSchema):
         model = Configuration
         include_fk = True
         load_instance = True
-    expected_measure = Nested(ExpectedMeasureSchema(many=True))
+    expected_measure = Nested('ExpectedMeasureSchema', many=True)
