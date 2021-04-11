@@ -10,6 +10,11 @@ chamber_blp = Blueprint('chambers', 'chambers',
                         description='Operations on Chambers')
 
 
+def get_chamber_units(chamber_id):
+    return Unit.query.join(SensorUnit.sensor).join(Sensor.chamber_sensor). \
+        filter(ChamberSensor.chamber_id == chamber_id).all()
+
+
 @chamber_blp.route('/chambers')
 class ChambersList(MethodView):
     @chamber_blp.doc(operationId='getChambers')
@@ -48,5 +53,4 @@ class ChamberUnitsAPI(MethodView):
         :return: Returns a list of Unit objects
         """
         sleep(1)
-        return Unit.query.join(SensorUnit.sensor).join(Sensor.chamber_sensor).\
-            filter(ChamberSensor.chamber_id == chamber_id).all()
+        return get_chamber_units(chamber_id)
