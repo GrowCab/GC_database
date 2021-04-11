@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from config.config import ma
 from marshmallow_sqlalchemy.fields import Nested
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
@@ -106,20 +106,20 @@ class ActuatorEffect(db.Model):
     unit = relationship('Unit')
 
 
-class ChamberSchema(SQLAlchemyAutoSchema):
+class ChamberSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Chamber
         load_instance = True
     sensors = Nested('ChamberSensorSchema', many=True)
 
 
-class ChamberSensorSchema(SQLAlchemyAutoSchema):
+class ChamberSensorSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = ChamberSensor
         load_instance = True
 
 
-class SensorSchema(SQLAlchemyAutoSchema):
+class SensorSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Sensor
         include_fk = True
@@ -127,21 +127,21 @@ class SensorSchema(SQLAlchemyAutoSchema):
     chamber = Nested('ChamberSchema')
 
 
-class UnitSchema(SQLAlchemyAutoSchema):
+class UnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Unit
         include_fk = True
         load_instance = True
 
 
-class SensorUnitSchema(SQLAlchemyAutoSchema):
+class SensorUnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = SensorUnit
         load_instance = True
     unit = Nested('UnitSchema')
 
 
-class ExpectedMeasureSchema(SQLAlchemyAutoSchema):
+class ExpectedMeasureSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = ExpectedMeasure
         include_fk = True
@@ -149,9 +149,17 @@ class ExpectedMeasureSchema(SQLAlchemyAutoSchema):
     unit = Nested('UnitSchema')
 
 
-class ConfigurationSchema(SQLAlchemyAutoSchema):
+class ConfigurationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Configuration
         include_fk = True
         load_instance = True
     expected_measure = Nested('ExpectedMeasureSchema', many=True)
+
+
+class ChamberScheduleSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Configuration
+        include_fk = True
+        load_instance = True
+    expected_measure = Nested('ExpectedMeasureSchema', many=True, exclude=('unit',))
