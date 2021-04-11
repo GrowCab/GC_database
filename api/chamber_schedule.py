@@ -1,3 +1,5 @@
+from time import sleep
+
 from flask.views import MethodView
 from flask_smorest import Blueprint
 
@@ -13,6 +15,7 @@ class ChamberSchedule(MethodView):
     @schedule_blp.doc(operationId='getChamberSchedule')
     @schedule_blp.response(200, ConfigurationSchema)
     def get(self, chamber_id: int):
+        sleep(1)
         configuration = Configuration.query.filter(Configuration.chamber_id == chamber_id).\
             order_by(Configuration.timestamp).one_or_none()
         return configuration

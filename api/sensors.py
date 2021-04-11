@@ -1,6 +1,8 @@
 """
 This is the sensors module and supports all the REST actions for the sensor data
 """
+from time import sleep
+
 from flask import make_response, abort
 from flask.views import MethodView
 from flask_smorest import Blueprint
@@ -34,6 +36,7 @@ class SensorListAPI(MethodView):
         -------------------
         :return: Returns a list of sensor objects
         """
+        sleep(1)
         return Sensor.query.order_by(Sensor.description).all()
 
     @sensors_blp.doc(operationId="putSensor")

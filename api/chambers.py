@@ -1,3 +1,5 @@
+from time import sleep
+
 from flask.views import MethodView
 from flask_smorest import Blueprint
 
@@ -45,5 +47,6 @@ class ChamberUnitsAPI(MethodView):
         :param chamber_id: ID of the chamber
         :return: Returns a list of Unit objects
         """
+        sleep(1)
         return Unit.query.join(SensorUnit.sensor).join(Sensor.chamber_sensor).\
             filter(ChamberSensor.chamber_id == chamber_id).all()
