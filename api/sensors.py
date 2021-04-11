@@ -42,7 +42,7 @@ class SensorListAPI(MethodView):
     @sensors_blp.doc(operationId="putSensor")
     @sensors_blp.arguments(SensorSchema(partial=True))
     @sensors_blp.response(200, SensorSchema)
-    def put(self, sensor):
+    def put(self, sensor: Sensor):
         """Stores a new sensor
 
         Each sensor contains an id, description and insertion timestamp
