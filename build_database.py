@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 from config.config import db
-from models.models import Sensor, Chamber, Unit, SensorUnit, Configuration, ExpectedMeasure, ChamberSensor
+from models.models import Sensor, Chamber, Unit, SensorUnit, Configuration, ExpectedMeasure, ChamberSensor, Measure
 
 if __name__ == "__main__":
 
@@ -44,10 +44,12 @@ if __name__ == "__main__":
     db.session.commit()
 
     # Add sensors to the chamber
+    chamber_sensor1 = ChamberSensor(chamber_id=chamber1.id, sensor_id=temperature_and_humidity_sensor.id)
+    chamber_sensor2 = ChamberSensor(chamber_id=chamber1.id, sensor_id=illumination_sensor.id)
     db.session.bulk_save_objects([
-        ChamberSensor(chamber_id=chamber1.id, sensor_id=temperature_and_humidity_sensor.id),
-        ChamberSensor(chamber_id=chamber1.id, sensor_id=illumination_sensor.id)
-    ])
+        chamber_sensor1,
+        chamber_sensor2
+    ], return_defaults=True)
 
     # Add a configuration to the chamber
 
@@ -74,5 +76,12 @@ if __name__ == "__main__":
     all_sensor_units = SensorUnit.query.all()
     all_units = Unit.query.all()
     all_configurations = Configuration.query.all()
+
+    db.session.bulk_save_objects([
+        Measure(sensor_unit_id=humidity_unit.id, chamber_sensor_id=chamber_sensor1.id, current_value=30),
+        Measure(sensor_unit_id=lux_unit.id, chamber_sensor_id=chamber_sensor2.id, current_value=1),
+        Measure(sensor_unit_id=celsius_unit.id, chamber_sensor_id=chamber_sensor1.id, current_value=20)
+    ], return_defaults=True)
+    db.session.commit()
 
     [print(s) for s in all_sensors]

@@ -36,6 +36,7 @@ class ChamberSensor(db.Model):
     sensor_id = Column(Integer, ForeignKey('sensor.id'))
     chamber = relationship("Chamber", back_populates='chamber_sensor')
     sensor = relationship("Sensor")
+    measure = relationship('Measure', back_populates='chamber_sensor')
 
 
 class SensorUnit(db.Model):
@@ -47,6 +48,7 @@ class SensorUnit(db.Model):
     sensor = relationship('Sensor', back_populates='sensor_unit', foreign_keys=[sensor_id])
     unit_id = Column(Integer, ForeignKey('unit.id'))
     unit = relationship('Unit')
+    measure = relationship('Measure', back_populates='sensor_unit')
 
 
 class Measure(db.Model):
@@ -54,7 +56,9 @@ class Measure(db.Model):
     timestamp = Column(DateTime, default=datetime.utcnow)
     current_value = Column(Float, nullable=False)
     sensor_unit_id = Column(Integer, ForeignKey('sensor_unit.id'))
-    sensor_unit = relationship('SensorUnit')
+    chamber_sensor_id = Column(Integer, ForeignKey('chamber_sensor.id'))
+    sensor_unit = relationship('SensorUnit', back_populates='measure')
+    chamber_sensor = relationship('ChamberSensor', back_populates='measure')
 
 
 class Unit(db.Model):
@@ -163,3 +167,11 @@ class ChamberScheduleSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
     expected_measure = Nested('ExpectedMeasureSchema', many=True, exclude=('unit',))
+
+
+class MeasureSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Measure
+        include_fk = True
+        load_instance = True
+    sensor_unit = Nested('SensorUnitSchema')
