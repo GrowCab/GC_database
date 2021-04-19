@@ -67,7 +67,8 @@ if __name__ == "__main__":
 
     db.session.bulk_save_objects([
         ExpectedMeasure(expected_value=0, end_hour=6, end_minute=0, configuration=chamber1_configuration, unit=lux),
-        ExpectedMeasure(expected_value=1, end_hour=23, end_minute=59, configuration=chamber1_configuration, unit=lux)
+        ExpectedMeasure(expected_value=1, end_hour=23, end_minute=59, configuration=chamber1_configuration, unit=lux),
+        ExpectedMeasure(expected_value=50, end_hour=23, end_minute=59, configuration=chamber1_configuration, unit=hum)
     ], return_defaults=True)
     db.session.commit()
 

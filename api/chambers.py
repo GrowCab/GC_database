@@ -78,5 +78,6 @@ class ChamberMeasureAPI(MethodView):
     @chamber_blp.doc(operationId='getChamberStatus')
     @chamber_blp.response(200, MeasureSchema(many=True))
     def get(self, chamber_id):
+        # sleep(1)
         results = Measure.query.join(ChamberSensor.sensor).filter(ChamberSensor.chamber_id == chamber_id).all()
         return results
