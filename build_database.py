@@ -22,8 +22,8 @@ if __name__ == "__main__":
 
     # Add units
 
-    lux = Unit(description='lux')
-    hum = Unit(description='hum')
+    lux = Unit(description='L')
+    hum = Unit(description='%')
     cel = Unit(description='C')
 
     db.session.bulk_save_objects([lux, hum, cel], return_defaults=True)
