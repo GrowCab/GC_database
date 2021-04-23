@@ -50,10 +50,27 @@ class Actuator{
     +String description
 }
 
-class ActuatorEffect{
-    +int change
+class ChamberActuator{
+  
 }
 
+class ActuatorEffect{
+    +int change
+    +bool status
+}
+
+%% This table stores the effect of drift from
+%% the initial efficiency of the effect of the
+%% actuator over the chamber. This needs a protocol
+%% for how and when it is updated. It will also need
+%% a historical record.
+class ChamberActuatorEffect{
+    +int change
+    +bool status
+}
+
+
+MasterChamber --o Chamber
 MeasureGroup --o Measure
 Measure -- ChamberSensor
 SensorUnit -- Measure
@@ -64,7 +81,11 @@ Sensor -- ChamberSensor
 ExpectedMeasure -- Unit
 Configuration --o ExpectedMeasure
 Chamber --o Configuration
-Chamber --o Actuator
+Chamber --o ChamberActuator
+ChamberActuator --o ChamberActuatorEffect
+ChamberActuatorEffect -- Unit
+MasterChamber -- ActuatorEffect
+ChamberActuator -- Actuator
 Actuator --o ActuatorEffect
 ActuatorEffect -- Unit
 
