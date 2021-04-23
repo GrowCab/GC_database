@@ -69,11 +69,16 @@ class ChamberActuatorEffect{
     +bool status
 }
 
+class MeasureActuator {
+    +bool status
+}
 
 MasterChamber --o Chamber
 MeasureGroup --o Measure
 Measure -- ChamberSensor
 SensorUnit -- Measure
+MeasureGroup --o MeasureActuator
+ChamberActuator -- MeasureActuator
 Sensor --o SensorUnit
 SensorUnit -- Unit
 Chamber --o ChamberSensor
