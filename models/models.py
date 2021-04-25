@@ -114,13 +114,15 @@ class ChamberSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Chamber
         load_instance = True
-    sensors = Nested('ChamberSensorSchema', many=True)
+    chamber_sensor = Nested('ChamberSensorSchema', many=True)
 
 
 class ChamberSensorSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = ChamberSensor
+        include_fk = True
         load_instance = True
+    sensor = Nested("SensorSchema")
 
 
 class SensorSchema(ma.SQLAlchemyAutoSchema):

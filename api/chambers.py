@@ -42,7 +42,7 @@ class ChamberAPI(MethodView):
         :param chamber_id: ID of the chamber
         :return: Returns a Chamber object
         """
-        return Chamber.query.filter(Chamber.id == chamber_id).one_or_none()
+        return Chamber.query.join(ChamberSensor.chamber).filter(Chamber.id == chamber_id).one_or_none()
 
 
 @chamber_blp.route('/chamber_sensors/<int:chamber_id>')
