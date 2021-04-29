@@ -4,7 +4,7 @@ from datetime import datetime
 from config.config import db
 from models.models import Sensor, Chamber, Unit, SensorUnit, Configuration, ExpectedMeasure, ChamberSensor, \
     SensorMeasure, \
-    MeasureGroup, Actuator, ActuatorEffect
+    MeasureGroup, Actuator, ActuatorEffect, ActuatorMeasure, ChamberActuator
 
 if __name__ == "__main__":
 
@@ -81,15 +81,6 @@ if __name__ == "__main__":
     all_units = Unit.query.all()
     all_configurations = Configuration.query.all()
 
-    measure_group = MeasureGroup()
-    measure_group.sensor_measure.extend([
-        SensorMeasure(sensor_unit=humidity_unit, chamber_sensor=chamber_sensor1, current_value=30),
-        SensorMeasure(sensor_unit=lux_unit, chamber_sensor=chamber_sensor2, current_value=1),
-        SensorMeasure(sensor_unit=celsius_unit, chamber_sensor=chamber_sensor1, current_value=20)
-    ])
-    db.session.add(measure_group)
-    db.session.commit()
-
     light_actuator = Actuator(description="Light actuator")
     light_actuator.actuator_effect.append(ActuatorEffect(change=1, actuator_id=light_actuator.id, unit_id=lux.id))
     cooling_actuator = Actuator(description="cooling actuator")
@@ -100,6 +91,22 @@ if __name__ == "__main__":
     humidity_actuator.actuator_effect.append(ActuatorEffect(change=10, actuator_id=humidity_actuator.id, unit_id=cel.id))
 
     db.session.add_all([light_actuator, cooling_actuator, heating_actuator, humidity_actuator])
+    db.session.commit()
+
+    chamber1_light_actuator = ChamberActuator(chamber=chamber1, actuator=light_actuator)
+    db.session.add(chamber1_light_actuator)
+    db.session.commit()
+
+    measure_group = MeasureGroup()
+    measure_group.sensor_measure.extend([
+        SensorMeasure(sensor_unit=humidity_unit, chamber_sensor=chamber_sensor1, current_value=30),
+        SensorMeasure(sensor_unit=lux_unit, chamber_sensor=chamber_sensor2, current_value=1),
+        SensorMeasure(sensor_unit=celsius_unit, chamber_sensor=chamber_sensor1, current_value=20)
+    ])
+    measure_group.actuator_measure.extend([
+        ActuatorMeasure(chamber_actuator=chamber1_light_actuator, measure_group=measure_group, current_value=0)
+    ])
+    db.session.add(measure_group)
     db.session.commit()
 
     [print(s) for s in all_sensors]

@@ -35,7 +35,7 @@ class ChamberSensor(db.Model):
     chamber_id = Column(Integer, ForeignKey('chamber.id'))
     sensor_id = Column(Integer, ForeignKey('sensor.id'))
     chamber = relationship("Chamber", back_populates='chamber_sensor')
-    sensor = relationship("Sensor", viewonly=True)
+    sensor = relationship("Sensor", back_populates='chamber_sensor')
     sensor_measure = relationship("SensorMeasure", back_populates='chamber_sensor')
 
 
@@ -115,6 +115,8 @@ class ChamberActuator(db.Model):
     id = Column(Integer, primary_key=True)
     chamber_id = Column(Integer, ForeignKey('chamber.id'), nullable=False)
     actuator_id = Column(Integer, ForeignKey('actuator.id'), nullable=False)
+    chamber = relationship("Chamber")
+    actuator = relationship("Actuator")
 
 
 class ActuatorEffect(db.Model):
@@ -133,6 +135,8 @@ class ActuatorMeasure(db.Model):
     current_value = Column(Integer, nullable=False)
     measure_group_id = Column(Integer, ForeignKey('measure_group.id'), nullable=False)
     chamber_actuator_id = Column(Integer, ForeignKey('chamber_actuator.id'), nullable=False)
+    measure_group = relationship("MeasureGroup")
+    chamber_actuator = relationship("ChamberActuator")
 
 
 class ChamberSchema(ma.SQLAlchemyAutoSchema):
