@@ -17,7 +17,7 @@ class Chamber(db.Model):
 
     configuration = relationship("Configuration")
     chamber_sensor = relationship("ChamberSensor")
-    actuator = relationship("Actuator")
+    chamber_actuator = relationship("ChamberActuator")
 
 
 class Sensor(db.Model):
@@ -26,7 +26,7 @@ class Sensor(db.Model):
     description = Column(String(512), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     sensor_unit = relationship("SensorUnit")
-    chamber_sensor = relationship('ChamberSensor')
+    chamber_sensor = relationship("ChamberSensor")
 
 
 class ChamberSensor(db.Model):
@@ -35,8 +35,8 @@ class ChamberSensor(db.Model):
     chamber_id = Column(Integer, ForeignKey('chamber.id'))
     sensor_id = Column(Integer, ForeignKey('sensor.id'))
     chamber = relationship("Chamber", back_populates='chamber_sensor')
-    sensor = relationship("Sensor")
-    measure = relationship('Measure', back_populates='chamber_sensor')
+    sensor = relationship("Sensor", viewonly=True)
+    sensor_measure = relationship("SensorMeasure", back_populates='chamber_sensor')
 
 
 class SensorUnit(db.Model):
@@ -44,21 +44,23 @@ class SensorUnit(db.Model):
     id = Column(Integer, primary_key=True)
     min = Column(Float)
     max = Column(Float)
-    sensor_id = Column(Integer, ForeignKey('sensor.id'))
+    sensor_id = Column(Integer, ForeignKey('sensor.id'), nullable=False)
     sensor = relationship('Sensor', back_populates='sensor_unit', foreign_keys=[sensor_id])
-    unit_id = Column(Integer, ForeignKey('unit.id'))
+    unit_id = Column(Integer, ForeignKey('unit.id'), nullable=False)
     unit = relationship('Unit')
-    measure = relationship('Measure', back_populates='sensor_unit')
+    sensor_measure = relationship('SensorMeasure', back_populates='sensor_unit')
 
 
-class Measure(db.Model):
+class SensorMeasure(db.Model):
     id = Column(Integer, primary_key=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
     current_value = Column(Float, nullable=False)
-    sensor_unit_id = Column(Integer, ForeignKey('sensor_unit.id'))
-    chamber_sensor_id = Column(Integer, ForeignKey('chamber_sensor.id'))
-    sensor_unit = relationship('SensorUnit', back_populates='measure')
-    chamber_sensor = relationship('ChamberSensor', back_populates='measure')
+    measure_group_id = Column(Integer, ForeignKey('measure_group.id'), nullable=False)
+    sensor_unit_id = Column(Integer, ForeignKey('sensor_unit.id'), nullable=False)
+    chamber_sensor_id = Column(Integer, ForeignKey('chamber_sensor.id'), nullable=False)
+    sensor_unit = relationship('SensorUnit', back_populates='sensor_measure')
+    chamber_sensor = relationship('ChamberSensor', back_populates='sensor_measure')
+    measure_group = relationship('MeasureGroup', back_populates='sensor_measure')
 
 
 class Unit(db.Model):
@@ -71,10 +73,18 @@ class Configuration(db.Model):
     __tablename__ = "configuration"
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
-    chamber_id = Column(Integer, ForeignKey('chamber.id'))
+    chamber_id = Column(Integer, ForeignKey('chamber.id'), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     expected_measure = relationship("ExpectedMeasure", back_populates='configuration')
     chamber = relationship("Chamber", back_populates='configuration')
+
+
+class MeasureGroup(db.Model):
+    __tablename__ = "measure_group"
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    sensor_measure = relationship("SensorMeasure")
+    actuator_measure = relationship("ActuatorMeasure")
 
 
 class ExpectedMeasure(db.Model):
@@ -87,8 +97,8 @@ class ExpectedMeasure(db.Model):
     expected_value = Column(Float, nullable=False)
     end_hour = Column(Integer, nullable=False)
     end_minute = Column(Integer, nullable=False)
-    configuration_id = Column(Integer, ForeignKey('configuration.id'))
-    unit_id = Column(Integer, ForeignKey('unit.id'))
+    configuration_id = Column(Integer, ForeignKey('configuration.id'), nullable=False)
+    unit_id = Column(Integer, ForeignKey('unit.id'), nullable=False)
     unit = relationship('Unit')
     configuration = relationship('Configuration', back_populates='expected_measure')
 
@@ -97,17 +107,32 @@ class Actuator(db.Model):
     __tablename__ = "actuator"
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
-    chamber_id = Column(Integer, ForeignKey('chamber.id'))
     actuator_effect = relationship("ActuatorEffect")
+
+
+class ChamberActuator(db.Model):
+    __tablename__ = "chamber_actuator"
+    id = Column(Integer, primary_key=True)
+    chamber_id = Column(Integer, ForeignKey('chamber.id'), nullable=False)
+    actuator_id = Column(Integer, ForeignKey('actuator.id'), nullable=False)
 
 
 class ActuatorEffect(db.Model):
     __tablename__ = "actuator_effect"
     id = Column(Integer, primary_key=True)
     change = Column(Integer, nullable=False)
-    actuator_id = Column(Integer, ForeignKey('actuator.id'))
-    unit_id = Column(Integer, ForeignKey('unit.id'))
+    actuator_id = Column(Integer, ForeignKey('actuator.id'), nullable=False)
+    unit_id = Column(Integer, ForeignKey('unit.id'), nullable=False)
+    actuator = relationship('Actuator', back_populates='actuator_effect')
     unit = relationship('Unit')
+
+
+class ActuatorMeasure(db.Model):
+    __tablename__ = "actuator_measure"
+    id = Column(Integer, primary_key=True)
+    current_value = Column(Integer, nullable=False)
+    measure_group_id = Column(Integer, ForeignKey('measure_group.id'), nullable=False)
+    chamber_actuator_id = Column(Integer, ForeignKey('chamber_actuator.id'), nullable=False)
 
 
 class ChamberSchema(ma.SQLAlchemyAutoSchema):
@@ -173,7 +198,7 @@ class ChamberScheduleSchema(ma.SQLAlchemyAutoSchema):
 
 class MeasureSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = Measure
+        model = SensorMeasure
         include_fk = True
         load_instance = True
     sensor_unit = Nested('SensorUnitSchema')

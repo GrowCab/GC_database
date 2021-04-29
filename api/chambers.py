@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 
 from models.models import Chamber, ChamberSensor, ChamberSchema, Unit, SensorUnit, Sensor, UnitSchema, \
-    SensorUnitSchema, Measure, MeasureSchema
+    SensorUnitSchema, SensorMeasure, MeasureSchema
 
 chamber_blp = Blueprint('chambers', 'chambers',
                         url_prefix='/api',
@@ -79,5 +79,5 @@ class ChamberMeasureAPI(MethodView):
     @chamber_blp.response(200, MeasureSchema(many=True))
     def get(self, chamber_id):
         # sleep(1)
-        results = Measure.query.join(ChamberSensor.sensor).filter(ChamberSensor.chamber_id == chamber_id).all()
+        results = SensorMeasure.query.join(ChamberSensor.sensor).filter(ChamberSensor.chamber_id == chamber_id).all()
         return results
