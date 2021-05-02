@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>68626504-907d-421c-9a70-c6f567e0b229.SCHEMA:main</OriginalElement>
+  <nodes>
+    <node x="981.5190582275392" y="523.0380815392057">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.measure_group</node>
+    <node x="48.667375694960356" y="-292.5018415916711">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.configuration</node>
+    <node x="1262.0693664550781" y="79.149658203125">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_unit</node>
+    <node x="874.6254579629828" y="254.86492114628925">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.unit</node>
+    <node x="766.2366790771486" y="-383.6466783154756">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber</node>
+    <node x="-693.837338455452" y="761.7281903567073">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sqlite_master</node>
+    <node x="567.4687500000001" y="-173.35191703722364">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_actuator</node>
+    <node x="1425.5883178710938" y="-275.6706848144531">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_sensor</node>
+    <node x="601.4687500000001" y="416.91229248046875">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator_measure</node>
+    <node x="284.9731137898973" y="-117.4757080078125">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator</node>
+    <node x="155.01226806640636" y="289.8245849609375">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.expected_measure</node>
+    <node x="406.0185546875001" y="135.70263671875">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator_effect</node>
+    <node x="1049.399658203125" y="-103.950439453125">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor</node>
+    <node x="1299.5693664550781" y="363.69970703125">68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_measure</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_actuator" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber" relationship="REFERENCES">
+      <point x="-45.0" y="-50.0" />
+      <point x="612.4687500000001" y="-100.00570747370142" />
+      <point x="861.7366790771486" y="-100.00570747370142" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_unit" relationship="REFERENCES">
+      <point x="71.0" y="-83.0" />
+      <point x="1477.0693664550781" y="441.83795166015625" />
+      <point x="1335.0693664550781" y="441.83795166015625" />
+      <point x="0.0" y="72.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_actuator" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator" relationship="REFERENCES">
+      <point x="45.0" y="-50.0" />
+      <point x="568.151150314634" y="-173.35191703722364" />
+      <point x="568.151150314634" y="-141.34652148652728" />
+      <point x="374.50788077528387" y="-141.34652148652728" />
+      <point x="374.50788077528387" y="-39.4757080078125" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator_effect" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator" relationship="REFERENCES">
+      <point x="-39.25" y="-61.0" />
+      <point x="445.2685546875001" y="72.5247802734375" />
+      <point x="380.4731137898973" y="72.5247802734375" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator_effect" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.unit" relationship="REFERENCES">
+      <point x="39.25" y="-61.0" />
+      <point x="523.7685546875001" y="200.56414794921875" />
+      <point x="515.1060180664064" y="200.56414794921875" />
+      <point x="515.1060180664064" y="227.88800048828125" />
+      <point x="970.1254579629828" y="227.88800048828125" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.measure_group" relationship="REFERENCES">
+      <point x="56.0" y="-50.0" />
+      <point x="769.4687500000001" y="575.0514036462134" />
+      <point x="1062.519058227539" y="575.0514036462134" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_sensor" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor" relationship="REFERENCES">
+      <point x="41.75" y="-50.0" />
+      <point x="1550.8383178710938" y="-207.7733917236328" />
+      <point x="1223.9786376953125" y="-207.7733917236328" />
+      <point x="1223.9786376953125" y="-37.369415283203125" />
+      <point x="1144.899658203125" y="-37.369415283203125" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_unit" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor" relationship="REFERENCES">
+      <point x="36.5" y="-72.0" />
+      <point x="1371.5693664550781" y="125.46984100341797" />
+      <point x="1144.899658203125" y="125.46984100341797" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_sensor" relationship="REFERENCES">
+      <point x="0.0" y="-83.0" />
+      <point x="1406.0693664550781" y="453.30958557128906" />
+      <point x="1509.0883178710938" y="453.30958557128906" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.configuration" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber" relationship="REFERENCES">
+      <point x="0.0" y="-61.0" />
+      <point x="144.16737569496036" y="-333.6466783154756" />
+      <point x="861.7366790771486" y="-333.6466783154756" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.expected_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.unit" relationship="REFERENCES">
+      <point x="47.75" y="-83.0" />
+      <point x="298.26226806640636" y="361.5" />
+      <point x="970.1254579629828" y="361.5" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.measure_group" relationship="REFERENCES">
+      <point x="-71.0" y="-83.0" />
+      <point x="1335.0693664550781" y="578.2890542559874" />
+      <point x="1062.519058227539" y="578.2890542559874" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.sensor_unit" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.unit" relationship="REFERENCES">
+      <point x="-36.5" y="-72.0" />
+      <point x="1298.5693664550781" y="265.4256591796875" />
+      <point x="970.1254579629828" y="265.4256591796875" />
+      <point x="0.0" y="39.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.actuator_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_actuator" relationship="REFERENCES">
+      <point x="-56.0" y="-50.0" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber_sensor" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.chamber" relationship="REFERENCES">
+      <point x="-41.75" y="-50.0" />
+      <point x="1467.3383178710938" y="-358.31480750627816" />
+      <point x="861.7366790771486" y="-358.31480750627816" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.expected_measure" target="68626504-907d-421c-9a70-c6f567e0b229.TABLE:main.configuration" relationship="REFERENCES">
+      <point x="-47.75" y="-83.0" />
+      <point x="202.76226806640636" y="335.0" />
+      <point x="144.16737569496036" y="335.0" />
+      <point x="0.0" y="61.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.7697190181324886" showDependencies="false" x="837.2160603371613" y="113.44871305580034" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

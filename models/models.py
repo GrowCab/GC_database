@@ -277,3 +277,29 @@ class ActuatorSchema(ma.SQLAlchemyAutoSchema):
         model = Actuator
         include_fk = True
         load_instance = True
+
+
+class EditableSensorMeasureSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = SensorMeasure
+        include_fk = True
+        load_instance = True
+        exclude = ('id', 'measure_group_id')
+
+
+class EditableActuatorMeasureSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = ActuatorMeasure
+        include_fk = True
+        load_instance = True
+        exclude = ('id', 'measure_group_id')
+
+
+class EditableMeasureGroup(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = MeasureGroup
+        include_fk = True
+        load_instance = True
+        exclude = ('id', 'timestamp')
+    sensor_measure = Nested('EditableSensorMeasureSchema', many=True)
+    actuator_measure = Nested('EditableActuatorMeasureSchema', many=True)

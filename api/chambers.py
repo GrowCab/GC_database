@@ -2,9 +2,10 @@ from time import sleep
 
 from flask.views import MethodView
 from flask_smorest import Blueprint
+from sqlalchemy import desc
 
 from models.models import Chamber, ChamberSensor, ChamberSchema, Unit, SensorUnit, Sensor, UnitSchema, \
-    SensorUnitSchema, SensorMeasure, MeasureSchema
+    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup
 
 chamber_blp = Blueprint('chambers', 'chambers',
                         url_prefix='/api',
@@ -77,6 +78,6 @@ class ChamberMeasureAPI(MethodView):
     @chamber_blp.doc(operationId='getChamberStatus')
     @chamber_blp.response(200, MeasureSchema(many=True))
     def get(self, chamber_id):
-        # sleep(1)
-        results = SensorMeasure.query.join(ChamberSensor.sensor).filter(ChamberSensor.chamber_id == chamber_id).all()
-        return results
+        measure_group = MeasureGroup.query.join(SensorMeasure).join(ChamberSensor.sensor).\
+            filter(ChamberSensor.chamber_id == chamber_id).order_by(desc(MeasureGroup.timestamp)).limit(1).one()
+        return measure_group.sensor_measure
