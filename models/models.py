@@ -53,7 +53,6 @@ class SensorUnit(db.Model):
 
 class SensorMeasure(db.Model):
     id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
     current_value = Column(Float, nullable=False)
     measure_group_id = Column(Integer, ForeignKey('measure_group.id'), nullable=False)
     sensor_unit_id = Column(Integer, ForeignKey('sensor_unit.id'), nullable=False)
@@ -143,6 +142,7 @@ class ChamberSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Chamber
         load_instance = True
+
     chamber_sensor = Nested('ChamberSensorSchema', many=True)
 
 
@@ -151,6 +151,8 @@ class ChamberSensorSchema(ma.SQLAlchemyAutoSchema):
         model = ChamberSensor
         include_fk = True
         load_instance = True
+        exclude = ('id', 'chamber_id')
+
     sensor = Nested("SensorSchema")
 
 
@@ -159,6 +161,8 @@ class SensorSchema(ma.SQLAlchemyAutoSchema):
         model = Sensor
         include_fk = True
         load_instance = True
+        exclude = ('id',)
+
     chamber = Nested('ChamberSchema')
 
 
@@ -182,6 +186,8 @@ class SensorUnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = SensorUnit
         load_instance = True
+        exclude = ('id',)
+
     unit = Nested('UnitSchema')
 
 
@@ -225,3 +231,49 @@ class MeasureSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
     sensor_unit = Nested('SensorUnitSchema')
+
+
+class MeasureGroupSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = MeasureGroup
+        include_fk = True
+        load_instance = True
+        exclude = ('id',)
+
+    sensor_measure = Nested('SensorMeasureSchema', many=True)
+    actuator_measure = Nested('ActuatorMeasureSchema', many=True)
+
+
+class SensorMeasureSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = SensorMeasure
+        include_fk = True
+        load_instance = True
+        exclude = ('id', 'measure_group_id')
+    chamber_sensor = Nested('ChamberSensorSchema')
+    sensor_unit = Nested('SensorUnitSchema')
+
+
+class ActuatorMeasureSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = ActuatorMeasure
+        include_fk = True
+        load_instance = True
+        exclude = ('id', 'measure_group_id')
+    chamber_actuator = Nested('ChamberActuatorSchema')
+
+
+class ChamberActuatorSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = ChamberActuator
+        include_fk = True
+        load_instance = True
+        exclude = ('id', 'chamber_id')
+    actuator = Nested('ActuatorSchema')
+
+
+class ActuatorSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Actuator
+        include_fk = True
+        load_instance = True
