@@ -69,7 +69,6 @@ class ChamberUnitsAPI(MethodView):
         :param chamber_id: ID of the chamber
         :return: Returns a list of Unit objects
         """
-        sleep(1)
         return get_chamber_units(chamber_id)
 
 

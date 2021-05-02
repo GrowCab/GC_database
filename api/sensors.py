@@ -8,7 +8,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 
 from config.config import db, app
-from models.models import Sensor, SensorSchema
+from models.models import Sensor, SensorSchema, EditableSensorSchema
 
 sensors_blp = Blueprint('sensors', 'sensors', url_prefix='/api', description='Operations on sensors')
 
@@ -40,7 +40,7 @@ class SensorListAPI(MethodView):
         return Sensor.query.order_by(Sensor.description).all()
 
     @sensors_blp.doc(operationId="putSensor")
-    @sensors_blp.arguments(SensorSchema(partial=True))
+    @sensors_blp.arguments(EditableSensorSchema)
     @sensors_blp.response(200, SensorSchema)
     def put(self, sensor: Sensor):
         """Stores a new sensor

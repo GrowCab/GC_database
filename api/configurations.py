@@ -7,7 +7,7 @@ from flask_smorest import Blueprint
 
 from api.chambers import get_chamber_units
 from config.config import db
-from models.models import Configuration, ConfigurationSchema
+from models.models import Configuration, ConfigurationSchema, EditableConfigurationSchema
 
 configuration_blp = Blueprint('configurations', 'configurations',
                               url_prefix='/api',
@@ -27,7 +27,7 @@ class ConfigurationsList(MethodView):
         return Configuration.query.order_by(Configuration.description).all()
 
     @configuration_blp.doc(operationId='putConfiguration')
-    @configuration_blp.arguments(ConfigurationSchema(partial=True))
+    @configuration_blp.arguments(EditableConfigurationSchema)
     @configuration_blp.response(200, ConfigurationSchema)
     def put(self, configuration):
         """Stores a new configuration

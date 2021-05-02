@@ -115,7 +115,7 @@ class ChamberActuator(db.Model):
     id = Column(Integer, primary_key=True)
     chamber_id = Column(Integer, ForeignKey('chamber.id'), nullable=False)
     actuator_id = Column(Integer, ForeignKey('actuator.id'), nullable=False)
-    chamber = relationship("Chamber")
+    chamber = relationship("Chamber", back_populates='chamber_actuator')
     actuator = relationship("Actuator")
 
 
@@ -135,7 +135,7 @@ class ActuatorMeasure(db.Model):
     current_value = Column(Integer, nullable=False)
     measure_group_id = Column(Integer, ForeignKey('measure_group.id'), nullable=False)
     chamber_actuator_id = Column(Integer, ForeignKey('chamber_actuator.id'), nullable=False)
-    measure_group = relationship("MeasureGroup")
+    measure_group = relationship("MeasureGroup", back_populates='actuator_measure')
     chamber_actuator = relationship("ChamberActuator")
 
 
@@ -162,6 +162,15 @@ class SensorSchema(ma.SQLAlchemyAutoSchema):
     chamber = Nested('ChamberSchema')
 
 
+class EditableSensorSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Sensor
+        include_fk = True
+        load_instance = True
+        exclude = ('id',)
+    chamber = Nested('ChamberSchema')
+
+
 class UnitSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Unit
@@ -181,6 +190,7 @@ class ExpectedMeasureSchema(ma.SQLAlchemyAutoSchema):
         model = ExpectedMeasure
         include_fk = True
         load_instance = True
+        exclude = ('configuration_id',)
     unit = Nested('UnitSchema')
 
 
@@ -190,6 +200,15 @@ class ConfigurationSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
     expected_measure = Nested('ExpectedMeasureSchema', many=True)
+
+
+class EditableConfigurationSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Configuration
+        include_fk = True
+        load_instance = True
+        fields = ('description', 'chamber_id', 'expected_measure')
+    expected_measure = Nested('ExpectedMeasureSchema', many=True, exclude=('configuration_id',))
 
 
 class ChamberScheduleSchema(ma.SQLAlchemyAutoSchema):
