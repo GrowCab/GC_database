@@ -4,6 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_smorest import Api
+from flask_cors import CORS
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -35,5 +36,6 @@ class Config:
 
 
 app.config.from_object(Config)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 api = Api(app)
