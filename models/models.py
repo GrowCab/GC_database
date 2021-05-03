@@ -24,6 +24,7 @@ class Sensor(db.Model):
     __tablename__ = "sensor"
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
+    hardware_classname = Column(String(512), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     sensor_unit = relationship("SensorUnit")
     chamber_sensor = relationship("ChamberSensor")

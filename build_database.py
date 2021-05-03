@@ -32,8 +32,8 @@ if __name__ == "__main__":
     db.session.commit()
 
     # Add a new sensors
-    temperature_and_humidity_sensor = Sensor(description="BME280")
-    illumination_sensor = Sensor(description="ILUM")
+    temperature_and_humidity_sensor = Sensor(description="Temperature", hardware_classname="BME280")
+    illumination_sensor = Sensor(description="ILUM", hardware_classname="TSL2561")
     db.session.add_all([temperature_and_humidity_sensor, illumination_sensor])
     db.session.commit()
 
