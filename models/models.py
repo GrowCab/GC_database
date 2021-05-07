@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from config.config import ma
+
+from marshmallow import Schema, fields
 from marshmallow_sqlalchemy.fields import Nested
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
@@ -24,7 +26,7 @@ class Sensor(db.Model):
     __tablename__ = "sensor"
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
-    hardware_classname = Column(String(512), nullable=False)
+    hardware_classname = Column(String(512), nullable=False, unique=True)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     sensor_unit = relationship("SensorUnit")
     chamber_sensor = relationship("ChamberSensor")
@@ -33,8 +35,8 @@ class Sensor(db.Model):
 class ChamberSensor(db.Model):
     __tablename__ = "chamber_sensor"
     id = Column(Integer, primary_key=True)
-    chamber_id = Column(Integer, ForeignKey('chamber.id'))
-    sensor_id = Column(Integer, ForeignKey('sensor.id'))
+    chamber_id = Column(Integer, ForeignKey('chamber.id'), nullable=False)
+    sensor_id = Column(Integer, ForeignKey('sensor.id'), nullable=False)
     chamber = relationship("Chamber", back_populates='chamber_sensor')
     sensor = relationship("Sensor", back_populates='chamber_sensor')
     sensor_measure = relationship("SensorMeasure", back_populates='chamber_sensor')
@@ -43,8 +45,8 @@ class ChamberSensor(db.Model):
 class SensorUnit(db.Model):
     __tablename__ = "sensor_unit"
     id = Column(Integer, primary_key=True)
-    min = Column(Float)
-    max = Column(Float)
+    min = Column(Float, nullable=False)
+    max = Column(Float, nullable=False)
     sensor_id = Column(Integer, ForeignKey('sensor.id'), nullable=False)
     sensor = relationship('Sensor', back_populates='sensor_unit', foreign_keys=[sensor_id])
     unit_id = Column(Integer, ForeignKey('unit.id'), nullable=False)
@@ -66,7 +68,9 @@ class SensorMeasure(db.Model):
 class Unit(db.Model):
     __tablename__ = "unit"
     id = Column(Integer, primary_key=True)
+    label = Column(String(512), nullable=False)
     description = Column(String(512), nullable=False)
+    hardware_label = Column(String(512), nullable=False)
 
 
 class Configuration(db.Model):
@@ -304,3 +308,8 @@ class EditableMeasureGroup(ma.SQLAlchemyAutoSchema):
         exclude = ('id', 'timestamp')
     sensor_measure = Nested('EditableSensorMeasureSchema', many=True)
     actuator_measure = Nested('EditableActuatorMeasureSchema', many=True)
+
+
+class ChamberStatusSchema(Schema):
+    data = fields.Dict(values=fields.Dict())
+

@@ -1,11 +1,10 @@
-from time import sleep
-
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy import desc
 
+from config.config import db
 from models.models import Chamber, ChamberSensor, ChamberSchema, Unit, SensorUnit, Sensor, UnitSchema, \
-    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup
+    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup, ChamberStatusSchema
 
 chamber_blp = Blueprint('chambers', 'chambers',
                         url_prefix='/api',
@@ -78,6 +77,34 @@ class ChamberMeasureAPI(MethodView):
     @chamber_blp.doc(operationId='getChamberStatus')
     @chamber_blp.response(200, MeasureSchema(many=True))
     def get(self, chamber_id):
+        measure_group = MeasureGroup.query.join(SensorMeasure).join(ChamberSensor.sensor).\
+            filter(ChamberSensor.chamber_id == chamber_id).order_by(desc(MeasureGroup.timestamp)).limit(1).one()
+        return measure_group.sensor_measure
+
+    @chamber_blp.doc(operationId='putChamberStatus')
+    @chamber_blp.arguments(ChamberStatusSchema)
+    @chamber_blp.response(200, MeasureSchema(many=True))
+    def put(self, chamber_status: ChamberStatusSchema, chamber_id: int):
+        chamber = Chamber.query.filter(Chamber.id == chamber_id).one()
+
+        print(f"Chamber {chamber}")
+        print(f"{chamber_status}")
+
+        measure_group = MeasureGroup()
+        db.session.add(measure_group)
+        db.session.commit()
+        for sensor_hardware_name, sensor_hardware_unit_values in chamber_status["data"].items():
+            for csensor in chamber.chamber_sensor:
+                if csensor.sensor.hardware_classname == sensor_hardware_name:
+                    for unit, value in sensor_hardware_unit_values.items():
+                        for csensor_unit in csensor.sensor.sensor_unit:
+                            if csensor_unit.unit.hardware_label == unit:
+                                print(f"{sensor_hardware_name} - {unit} - {value}")
+                                measure_group.sensor_measure.extend([
+                                    SensorMeasure(sensor_unit=csensor_unit, chamber_sensor=csensor, current_value=value)
+                                ])
+        db.session.commit()
+
         measure_group = MeasureGroup.query.join(SensorMeasure).join(ChamberSensor.sensor).\
             filter(ChamberSensor.chamber_id == chamber_id).order_by(desc(MeasureGroup.timestamp)).limit(1).one()
         return measure_group.sensor_measure

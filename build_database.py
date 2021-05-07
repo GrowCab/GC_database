@@ -1,6 +1,6 @@
-import os
-from datetime import datetime
+# -*- coding: UTF-8 -*-
 
+import os
 from config.config import db
 from models.models import Sensor, Chamber, Unit, SensorUnit, Configuration, ExpectedMeasure, ChamberSensor, \
     SensorMeasure, \
@@ -24,23 +24,23 @@ if __name__ == "__main__":
 
     # Add units
 
-    lux = Unit(description='L')
-    hum = Unit(description='%')
-    cel = Unit(description='C')
+    cel = Unit(description='C', label="Temperature 🌡", hardware_label="temperature")
+    lux = Unit(description='💡', label="Light 💡", hardware_label="visible_light")
+    hum = Unit(description='%', label="Humidity ☁️", hardware_label="humidity")
 
     db.session.bulk_save_objects([lux, hum, cel], return_defaults=True)
     db.session.commit()
 
     # Add a new sensors
     temperature_and_humidity_sensor = Sensor(description="Temperature", hardware_classname="BME280")
-    illumination_sensor = Sensor(description="ILUM", hardware_classname="TSL2561")
+    illumination_sensor = Sensor(description="Light", hardware_classname="TSL2561")
     db.session.add_all([temperature_and_humidity_sensor, illumination_sensor])
     db.session.commit()
 
     # Add sensor units
-    celsius_unit = SensorUnit(min=-30, max=90, unit=cel, sensor=temperature_and_humidity_sensor)
+    lux_unit = SensorUnit(min=0, max=1, unit=lux, sensor=illumination_sensor)
+    celsius_unit = SensorUnit(min=-5, max=40, unit=cel, sensor=temperature_and_humidity_sensor)
     humidity_unit = SensorUnit(min=0, max=100, unit=hum, sensor=temperature_and_humidity_sensor)
-    lux_unit = SensorUnit(min=0, max=10000, unit=lux, sensor=illumination_sensor)
     db.session.add_all([celsius_unit, humidity_unit, lux_unit])
     db.session.commit()
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     heating_actuator = Actuator(description="heating actuator")
     heating_actuator.actuator_effect.append(ActuatorEffect(change=5, actuator_id=heating_actuator.id, unit_id=hum.id))
     humidity_actuator = Actuator(description="humidifier")
-    humidity_actuator.actuator_effect.append(ActuatorEffect(change=10, actuator_id=humidity_actuator.id, unit_id=cel.id))
+    humidity_actuator.actuator_effect.append(ActuatorEffect(change=6, actuator_id=humidity_actuator.id, unit_id=cel.id))
 
     db.session.add_all([light_actuator, cooling_actuator, heating_actuator, humidity_actuator])
     db.session.commit()
