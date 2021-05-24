@@ -88,6 +88,11 @@ class ConfigurationsList(MethodView):
             if unit_interval[-1].end_hour != 23:
                 is_valid = False
 
+            for i, el in enumerate(unit_interval[1:]):
+                if (el.end_hour, el.end_minute) < (unit_interval[i].end_hour, unit_interval[i].end_minute):
+                    is_valid = False
+                    break
+
             if not is_valid:
                 break
         if is_valid:
