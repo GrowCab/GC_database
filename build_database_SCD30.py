@@ -28,9 +28,9 @@ if __name__ == "__main__":
     lux = Unit(description='💡', label="Light 💡", hardware_label="visible_light")
     hum = Unit(description='%', label="Humidity ☁️", hardware_label="humidity")
     co2 = Unit(description="ppm", label="CO₂", hardware_label="CO2")
-    fan = Unit(description="Fan", label="Fan", hardware_label="fan")
+    #fan = Unit(description="Fan", label="Fan", hardware_label="fan")
 
-    db.session.bulk_save_objects([ hum, cel, co2, lux, fan], return_defaults=True)
+    db.session.bulk_save_objects([lux, cel, hum, co2], return_defaults=True)
     db.session.commit()
 
     # Add a new sensors
@@ -41,9 +41,9 @@ if __name__ == "__main__":
 
     # Add sensor units
     #lux_unit = SensorUnit(min=0, max=1, unit=lux, sensor=illumination_sensor)
-    celsius_unit = SensorUnit(min=-5, max=40, unit=cel, sensor=temperature_and_humidity_sensor)
+    celsius_unit  = SensorUnit(min=-5, max=40, unit=cel, sensor=temperature_and_humidity_sensor)
     humidity_unit = SensorUnit(min=0, max=100, unit=hum, sensor=temperature_and_humidity_sensor)
-    co2_unit = SensorUnit(min=400, max=100, unit=co2, sensor=temperature_and_humidity_sensor)
+    co2_unit      = SensorUnit(min=400,    max=2000, unit=co2, sensor=temperature_and_humidity_sensor)
     db.session.add_all([celsius_unit, humidity_unit])
     db.session.commit()
 
@@ -72,9 +72,9 @@ if __name__ == "__main__":
                         unit_id=lux.id),
         ExpectedMeasure(expected_value=1, end_hour=23, end_minute=59, configuration=chamber1_configuration,
                         unit_id=lux.id),
-        ExpectedMeasure(expected_value=50, end_hour=23, end_minute=59, configuration=chamber1_configuration,
-                        unit_id=hum.id),
-        ExpectedMeasure(expeced_value=0, end_hour=23, end_minute=59, configuration=chamber1_configuration)
+        #ExpectedMeasure(expected_value=50, end_hour=23, end_minute=59, configuration=chamber1_configuration,
+        #                unit_id=hum.id)#,
+        #ExpectedMeasure(expected_value=0, end_hour=23, end_minute=59, configuration=chamber1_configuration)
     ])
     db.session.commit()
 

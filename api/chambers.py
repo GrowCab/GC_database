@@ -88,13 +88,15 @@ class ChamberMeasureAPI(MethodView):
         chamber = Chamber.query.filter(Chamber.id == chamber_id).one()
 
         print(f"Chamber {chamber}")
-        print(f"{chamber_status}")
-
+        #print(f"{chamber_status}")
+        #print("Ssssss........................................................................................")
         measure_group = MeasureGroup()
         db.session.add(measure_group)
         db.session.commit()
         for sensor_hardware_name, sensor_hardware_unit_values in chamber_status["data"].items():
+            #print(f"sensor_hardware_name ----------------------------- {sensor_hardware_name}")
             for csensor in chamber.chamber_sensor:
+                #print(f"csensor.sensor.hardware_classname ~~~~~~~~~~~~~~~~~~~~~~ {csensor.sensor.hardware_classname}")
                 if csensor.sensor.hardware_classname == sensor_hardware_name:
                     for unit, value in sensor_hardware_unit_values.items():
                         for csensor_unit in csensor.sensor.sensor_unit:
