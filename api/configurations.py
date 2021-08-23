@@ -71,8 +71,9 @@ class ConfigurationsList(MethodView):
             unit_interval = [em for em in configuration.expected_measure if em.unit_id == unit.id]
             #   - There is a range for each unit in the chamber
             if not unit_interval:
-                is_valid = False
-                break
+                #is_valid = False
+                #break
+                continue
             #   - Each units' configuration is a valid 24h interval
             for interval in unit_interval:
                 #   - Each interval is within 0000 - 2359
