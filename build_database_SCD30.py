@@ -24,10 +24,10 @@ if __name__ == "__main__":
 
     # Add units
 
-    cel = Unit(description='C', label="Temperature 🌡", hardware_label="temperature")
-    lux = Unit(description='💡', label="Light 💡", hardware_label="visible_light")
-    hum = Unit(description='%', label="Humidity ☁️", hardware_label="humidity")
-    co2 = Unit(description="ppm", label="CO₂", hardware_label="CO2")
+    cel = Unit(description='C', label="Temperature 🌡", hardware_label="temperature", controllable = True)
+    lux = Unit(description='💡', label="Light 💡", hardware_label="visible_light", controllable = True)
+    hum = Unit(description='%', label="Humidity ☁️", hardware_label="humidity", controllable = False)
+    co2 = Unit(description="ppm", label="CO₂", hardware_label="CO2", controllable = False)
     #fan = Unit(description="Fan", label="Fan", hardware_label="fan")
 
     db.session.bulk_save_objects([lux, cel, hum, co2], return_defaults=True)

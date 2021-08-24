@@ -5,7 +5,7 @@ from config.config import ma
 from marshmallow import Schema, fields
 from marshmallow_sqlalchemy.fields import Nested
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boolean
 from sqlalchemy.orm import relationship
 
 from config.config import db
@@ -71,6 +71,7 @@ class Unit(db.Model):
     label = Column(String(512), nullable=False)
     description = Column(String(512), nullable=False)
     hardware_label = Column(String(512), nullable=False)
+    controllable = Column(Boolean(), default=True)
 
 
 class Configuration(db.Model):

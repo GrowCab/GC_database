@@ -68,12 +68,6 @@ if __name__ == "__main__":
     db.session.add_all([
         ExpectedMeasure(expected_value=0, end_hour=6, end_minute=0, configuration=chamber1_configuration,
                         unit_id=lux.id),
-        ExpectedMeasure(expected_value=0, end_hour=9, end_minute=22, configuration=chamber1_configuration,
-                        unit_id=lux.id),
-        ExpectedMeasure(expected_value=0, end_hour=9, end_minute=26, configuration=chamber1_configuration,
-                        unit_id=lux.id),
-        ExpectedMeasure(expected_value=0, end_hour=9, end_minute=28, configuration=chamber1_configuration,
-                        unit_id=lux.id),
         ExpectedMeasure(expected_value=1, end_hour=23, end_minute=59, configuration=chamber1_configuration,
                         unit_id=lux.id),
         ExpectedMeasure(expected_value=50, end_hour=23, end_minute=59, configuration=chamber1_configuration,
