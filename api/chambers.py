@@ -4,7 +4,7 @@ from sqlalchemy import desc
 
 from config.config import db
 from models.models import Chamber, ChamberSensor, ChamberSchema, Unit, SensorUnit, Sensor, UnitSchema, \
-    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup, ChamberStatusSchema
+    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup, ChamberStatusSchema, MeasureGroupSchema
 
 chamber_blp = Blueprint('chambers', 'chambers',
                         url_prefix='/api',
@@ -75,11 +75,11 @@ class ChamberUnitsAPI(MethodView):
 @chamber_blp.route('/chamber_status/<int:chamber_id>')
 class ChamberMeasureAPI(MethodView):
     @chamber_blp.doc(operationId='getChamberStatus')
-    @chamber_blp.response(200, MeasureSchema(many=True))
+    @chamber_blp.response(200, MeasureGroupSchema)
     def get(self, chamber_id):
         measure_group = MeasureGroup.query.join(SensorMeasure).join(ChamberSensor.sensor).\
             filter(ChamberSensor.chamber_id == chamber_id).order_by(desc(MeasureGroup.timestamp)).limit(1).one()
-        return measure_group.sensor_measure
+        return measure_group
 
     @chamber_blp.doc(operationId='putChamberStatus')
     @chamber_blp.arguments(ChamberStatusSchema)
