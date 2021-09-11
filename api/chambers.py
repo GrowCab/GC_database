@@ -45,6 +45,17 @@ class ChamberAPI(MethodView):
         return Chamber.query.join(ChamberSensor.chamber).filter(Chamber.id == chamber_id).one_or_none()
 
 
+@chamber_blp.route('/chamber/power/<int:chamber_id>/<int:chamber_power_status>')
+class ChamberPowerAPI(MethodView):
+    @chamber_blp.doc(operationId='setChamberPowerStatus')
+    @chamber_blp.response(200, ChamberSchema)
+    def put(self, chamber_id: int, chamber_power_status: int):
+        chamber = Chamber.query.filter(Chamber.id == chamber_id).one_or_none()
+        chamber.status = chamber_power_status
+        db.session.commit()
+        return chamber
+
+
 @chamber_blp.route('/chamber_sensors/<int:chamber_id>')
 class ChamberSensorAPI(MethodView):
     @chamber_blp.doc(operationId='getChamberSensors')

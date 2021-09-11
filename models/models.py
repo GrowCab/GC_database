@@ -1,3 +1,4 @@
+import enum
 from datetime import datetime
 
 from config.config import ma
@@ -5,17 +6,26 @@ from config.config import ma
 from marshmallow import Schema, fields
 from marshmallow_sqlalchemy.fields import Nested
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, Boolean, Enum
 from sqlalchemy.orm import relationship
 
 from config.config import db
 
 
 class Chamber(db.Model):
+    class ChamberPowerStatus(enum.IntEnum):
+        POWER_OFF = 0
+        RUNNING = 1
+        REBOOT = 2
+
+        def __str__(self):
+            return self.value
+
     __tablename__ = "chamber"
     id = Column(Integer, primary_key=True)
     description = Column(String(512), nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    status = Column(Enum(ChamberPowerStatus), default=ChamberPowerStatus.RUNNING)
 
     configuration = relationship("Configuration")
     chamber_sensor = relationship("ChamberSensor")
