@@ -13,13 +13,13 @@ from config.config import db
 
 
 class Chamber(db.Model):
-    class ChamberPowerStatus(enum.IntEnum):
-        POWER_OFF = 0
-        RUNNING = 1
-        REBOOT = 2
-
-        def __str__(self):
-            return self.value
+    """
+    Stores the description, status (POWER_OFF, RUNNING, REBOOT) of the chamber and the last updated timestamp
+    """
+    class ChamberPowerStatus(str, enum.Enum):
+        POWER_OFF = "POWER_OFF"
+        RUNNING = "RUNNING"
+        REBOOT = "REBOOT"
 
     __tablename__ = "chamber"
     id = Column(Integer, primary_key=True)
@@ -159,6 +159,12 @@ class ChamberSchema(ma.SQLAlchemyAutoSchema):
         model = Chamber
         load_instance = True
 
+    status = fields.String(
+                    required=True,
+                    metadata={
+                        "enum": [s for s in Chamber.ChamberPowerStatus],
+                    },
+                )
     chamber_sensor = Nested('ChamberSensorSchema', many=True)
 
 
@@ -324,3 +330,14 @@ class EditableMeasureGroup(ma.SQLAlchemyAutoSchema):
 class ChamberStatusSchema(Schema):
     data = fields.Dict(values=fields.Dict())
 
+
+class ChamberPowerStatusSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Chamber
+
+    status = fields.String(
+                    required=True,
+                    metadata={
+                        "enum": [s for s in Chamber.ChamberPowerStatus],
+                    },
+                )
