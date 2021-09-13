@@ -48,6 +48,12 @@ class ChamberAPI(MethodView):
 
 @chamber_blp.route('/chamber/power/<int:chamber_id>')
 class ChamberPowerAPI(MethodView):
+    @chamber_blp.doc(operationId='getChamberPowerStatus')
+    @chamber_blp.response(200, ChamberPowerStatusSchema)
+    def get(self, chamber_id: int):
+        ret = Chamber.query.filter(Chamber.id == chamber_id).one_or_none()
+        return ret
+
     @chamber_blp.doc(operationId='setChamberPowerStatus')
     @chamber_blp.arguments(ChamberPowerStatusSchema)
     @chamber_blp.response(200, ChamberSchema)

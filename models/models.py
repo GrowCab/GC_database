@@ -159,12 +159,6 @@ class ChamberSchema(ma.SQLAlchemyAutoSchema):
         model = Chamber
         load_instance = True
 
-    status = fields.String(
-                    required=True,
-                    metadata={
-                        "enum": [s for s in Chamber.ChamberPowerStatus],
-                    },
-                )
     chamber_sensor = Nested('ChamberSensorSchema', many=True)
 
 
@@ -334,10 +328,4 @@ class ChamberStatusSchema(Schema):
 class ChamberPowerStatusSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Chamber
-
-    status = fields.String(
-                    required=True,
-                    metadata={
-                        "enum": [s for s in Chamber.ChamberPowerStatus],
-                    },
-                )
+        fields = ('status',)
