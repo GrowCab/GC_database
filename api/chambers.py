@@ -4,7 +4,8 @@ from sqlalchemy import desc
 
 from config.config import db
 from models.models import Chamber, ChamberSensor, ChamberSchema, Unit, SensorUnit, Sensor, UnitSchema, \
-    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup, ChamberStatusSchema, MeasureGroupSchema
+    SensorUnitSchema, SensorMeasure, MeasureSchema, MeasureGroup, ChamberStatusSchema, MeasureGroupSchema, \
+    ChamberPowerStatusSchema
 
 chamber_blp = Blueprint('chambers', 'chambers',
                         url_prefix='/api',
@@ -43,6 +44,24 @@ class ChamberAPI(MethodView):
         :return: Returns a Chamber object
         """
         return Chamber.query.join(ChamberSensor.chamber).filter(Chamber.id == chamber_id).one_or_none()
+
+
+@chamber_blp.route('/chamber/power/<int:chamber_id>')
+class ChamberPowerAPI(MethodView):
+    @chamber_blp.doc(operationId='getChamberPowerStatus')
+    @chamber_blp.response(200, ChamberPowerStatusSchema)
+    def get(self, chamber_id: int):
+        ret = Chamber.query.filter(Chamber.id == chamber_id).one_or_none()
+        return ret
+
+    @chamber_blp.doc(operationId='setChamberPowerStatus')
+    @chamber_blp.arguments(ChamberPowerStatusSchema)
+    @chamber_blp.response(200, ChamberSchema)
+    def put(self, chamber_power_status: Chamber.ChamberPowerStatus, chamber_id: int):
+        chamber = Chamber.query.filter(Chamber.id == chamber_id).one_or_none()
+        chamber.status = Chamber.ChamberPowerStatus[chamber_power_status['status']]
+        db.session.commit()
+        return chamber
 
 
 @chamber_blp.route('/chamber_sensors/<int:chamber_id>')
